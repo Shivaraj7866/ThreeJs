@@ -41,7 +41,7 @@ const scene=new THREE.Scene()
 
 let geometry=new THREE.BoxGeometry(1,1,1)
 console.log(geometry)
-let material=new THREE.MeshBasicMaterial({map:Deertexture,wireframe:false})
+let material=new THREE.MeshBasicMaterial({map:Deertexture,wireframe:false,side:THREE.DoubleSide})
 let mesh=new THREE.Mesh(geometry,material)
 scene.add(mesh)
 

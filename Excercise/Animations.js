@@ -50,12 +50,16 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
 
 const canvas=document.querySelector('canvas.webgl')
 
-const scene=new THREE.Scene()
-
 let size={
     width:window.innerWidth,
     height:window.innerHeight
 }
+const scene=new THREE.Scene()
+
+const camera=new THREE.PerspectiveCamera(75,size.width/size.height,0.1,1000)
+camera.position.z=4
+// camera.lookAt(mesh.position)
+scene.add(camera)
 
 const renderer=new THREE.WebGLRenderer({canvas:canvas})
 renderer.setSize(size.width,size.height)
@@ -65,11 +69,6 @@ let mesh=new THREE.Mesh(
     new THREE.MeshBasicMaterial({color:0xff0000})
 )
 scene.add(mesh)
-
-const camera=new THREE.PerspectiveCamera(75,size.width/size.height,0.1,1000)
-camera.position.z=4
-// camera.lookAt(mesh.position)
-scene.add(camera)
 
 //resize
     window.addEventListener('resize',()=>{
@@ -100,10 +99,12 @@ let cursor={
 
 window.addEventListener('mousemove',(event)=>{
     cursor.x = event.clientX / size.width-0.5
+    console.log(cursor.x)
     cursor.y = -(event.clientY / size.height-0.5)
     console.log(cursor.y)
 })
-
+console.log(cursor.x)
+console.log(cursor.y)
 function animate(){
 
 //update camera

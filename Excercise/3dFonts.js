@@ -18,7 +18,7 @@ controls.enableDamping = true;
 // ------------------TextureLoader------------------
 
 const textureLoader = new THREE.TextureLoader()
-const matCaptexture = textureLoader.load("/Images/flowers.webp")
+const matCaptexture = textureLoader.load("/Images/deer.webp")
 console.log(matCaptexture)
 
 //-----------------FontLoader--------------

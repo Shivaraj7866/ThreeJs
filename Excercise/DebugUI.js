@@ -11,6 +11,7 @@ const gui=new GUI({
 });
 
 window.addEventListener('keydown',(event)=>{
+    console.log(event)
     if(event.key === 'h'){
         gui.show(gui._hidden)
     }
