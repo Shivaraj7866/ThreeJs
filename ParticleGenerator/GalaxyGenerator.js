@@ -50,7 +50,7 @@ const galaxyGenerator = () => {
     }
 
     /**
-     * Geometry
+     * geometry
      */
    let Geometry=new THREE.BufferGeometry()
 
