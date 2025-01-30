@@ -6,6 +6,7 @@ import "./style.css"
 console.log(gsap)
 
 const canvas=document.querySelector("canvas.webgl")
+let bodyElement=document.querySelector("body")
 
 let size={
     width: window.innerWidth,
@@ -55,7 +56,8 @@ gui
 /**
  * meshes
  */
-let meshDistance=5;
+let meshDistance=camera.position.x/6;
+console.log(meshDistance)
 let mesh1=new THREE.Mesh(
     new THREE.TorusGeometry(1,0.4,16,60),
     material
@@ -68,24 +70,33 @@ let mesh3=new THREE.Mesh(
     new THREE.TorusKnotGeometry(0.8,0.3,100,16),
     material
 )
+
 let mesh4=new THREE.Mesh(
     new THREE.BoxGeometry(2,2,0.3),
     material
 )
 
-mesh1.position.y=meshDistance * 0
-mesh2.position.y=-meshDistance * 1
-mesh3.position.y=-meshDistance * 2
-mesh4.position.y=-meshDistance * 3
+let mesh5=new THREE.Mesh(
+    new THREE.BoxGeometry(2,2,0.3),
+    material
+)
 
-mesh1.position.x=3
-mesh2.position.x=-3
-mesh3.position.x=3
-mesh4.position.x=-3
+let mesh6=new THREE.Mesh(
+    new THREE.BoxGeometry(2,2,0.3),
+    material
+)
 
-scene.add(mesh1,mesh2,mesh3,mesh4)
+mesh1.position.x=meshDistance
+mesh2.position.x=meshDistance
+mesh3.position.x=meshDistance
+mesh4.position.x=meshDistance
+mesh5.position.x=meshDistance
+mesh6.position.x=meshDistance
+
+scene.add(mesh1,mesh2,mesh3,mesh4,mesh5,mesh6)
 
 const sectionMeshes=[mesh1,mesh2,mesh3,mesh4]
+// console.log(mesh1)
 
 //particles
 const particleCounts=300
@@ -96,6 +107,7 @@ for(let i = 0 ; i<particleCounts ; i++){
     positions[i * 3 + 0] = (Math.random()-0.5)*10
     positions[i * 3 + 1]=meshDistance * 0.5 - Math.random() * meshDistance * sectionMeshes.length
     positions[i * 3 + 2]=(Math.random()-0.5)*10
+
 }
 
 let ParticleGeometry=new THREE.BufferGeometry()
@@ -119,29 +131,62 @@ scene.add(Dlight)
 
 let scrollY=window.scrollY
 let currentSection=0;
+let newSection=0
+// console.log(scrollY)
 
 window.addEventListener("scroll",()=>{
         scrollY=window.scrollY
-        let newSection=Math.round(scrollY/size.height)
+         newSection=Math.round(scrollY/size.height)
+        // console.log(newSection)
+        // console.log(scrollY,"scrollY")
 
         if(newSection != currentSection){
             currentSection=newSection
 
-            gsap.to(
-                sectionMeshes[currentSection].rotation,
-                // console.log(sectionMeshes[currentSection].rotation)
-                {
-                    duration: 1.5,
-                    ease:"power2.inOut",
-                    x:"+=6",
-                    y:"+=3",
-                    z:"+=1.5"
-                }
-            )
-            console.log("changed",currentSection)
+            if(newSection === 2){
+
+                // scene.add(mesh1,mesh2,mesh3,mesh4)
+
+
+                gsap.from(
+                    ".section",
+                    {
+                        scrollTrigger:".webgl",
+                        x:800
+                    }
+                )
+
+            }else{
+                // scene.remove(mesh1,mesh2,mesh3,mesh4)
+
+            }
+
+            // gsap.to(
+            //     sectionMeshes[currentSection],
+            //     // console.log(sectionMeshes[currentSection].rotation)
+            //     {   
+            //         ScrollTrigger:".webgl",
+            //         duration: 1.5,
+            //         // ease:"power2.inOut",
+            //         x:"+=6",
+            //         y:"+=3",
+            //         z:"+=1.5"
+            //     }
+            // )
+            // console.log("changed",currentSection)
         }
     })
 
+    
+    let cursor={}
+    cursor.x=0
+    cursor.y=0
+    
+    window.addEventListener("mousemove",(event)=>{
+        cursor.x=(event.clientX/size.width-0.5)*5
+        cursor.y=(event.clientY/size.height-0.5)*5
+        // console.log(cursor.x)
+    })
     
     window.addEventListener("resize",()=>{
         
@@ -159,15 +204,6 @@ window.addEventListener("scroll",()=>{
         renderer.setPixelRatio(Math.min(devicePixelRatio,2))
     })
 
-    let cursor={}
-    cursor.x=0
-    cursor.y=0
-    
-    window.addEventListener("mousemove",(event)=>{
-        cursor.x=(event.clientX/size.width-0.5)*5
-        cursor.y=(event.clientY/size.height-0.5)*5
-        // console.log(event)
-    })
 
 let clock=new THREE.Clock()
 let previousTime=0;
@@ -178,11 +214,12 @@ function animate(){
     let deltaTime= elapsedTime - previousTime
     previousTime=elapsedTime;
 
-    // console.log(elapsedTime)
-    // console.log(deltaTime)
-
     //Update camera position and Animate
-    camera.position.y = -scrollY/size.height * meshDistance
+    // camera.position.x = scrollY/size.height * meshDistance
+
+    if(newSection === 2){
+        camera.position.x = scrollY/size.height * meshDistance 
+    }
 
     const parallaxX=cursor.x *0.5
     const parallaxY=-cursor.y *0.5
